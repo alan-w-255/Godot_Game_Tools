@@ -64,6 +64,8 @@ class GGT_OT_INIT_CHARACTER_OT_GGT(bpy.types.Operator, ImportHelper):
             characterCollection.objects.link(characterArmature)
             characterArmature.name = "Armature"
             characterArmature.animation_data.action.name = "T-Pose"
+            tool.new_join_actions.clear()
+            tool.new_join_actions.append(characterArmature.animation_data.action)
             tool.target_object = characterArmature
         bpy.ops.wm_ggt.prepare_mixamo_rig('EXEC_DEFAULT')
         return {'FINISHED'}
@@ -107,6 +109,7 @@ class GGT_OT_JOIN_ANIMATIONS_OT_GGT(Operator, ImportHelper):
         # Debug
         removeImports = True
         imported_objs = []
+        tool.new_join_actions.clear()
 
         if bpy.data.collections.get(characterCollectionName) is not None:
             characterCollection = bpy.data.collections.get(characterCollectionName)
@@ -132,6 +135,7 @@ class GGT_OT_JOIN_ANIMATIONS_OT_GGT(Operator, ImportHelper):
                 index = 0
                 for obj in imported_objs:
                     obj.animation_data.action.name = file_names_list[index]
+                    tool.new_join_actions.append(obj.animation_data.action)
                     # Rename the bones
                     for bone in obj.pose.bones:
                         if ':' not in bone.name: continue
@@ -164,6 +168,7 @@ class GGT_OT_JOIN_ANIMATIONS_OT_GGT(Operator, ImportHelper):
         target_armature = tool.target_object
         files = self.getSelectedFiles(self.properties.filepath, self.properties.files)
         self.importModels(sorted(files), target_armature, context)
+        bpy.ops.wm_ggt.animation_stop('EXEC_DEFAULT')
         bpy.ops.scene.process_actions('EXEC_DEFAULT')
         self.setDefaultAnimation(context)
         self.report({'INFO'}, 'Animations Imported Successfully')

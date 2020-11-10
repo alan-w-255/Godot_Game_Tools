@@ -131,6 +131,7 @@ class GGT_AddonProperties_GGT(PropertyGroup):
     # Animation Actions
     character_export_create_animation_tree: BoolProperty(name="Create Animation Tree", description="Whether or not an animation tree is created when exporting as a Godot scene")
     actions = []
+    new_join_actions = []
 
 # ------------------------------------------------------------------------ #
 # ------------------------------------------------------------------------ #

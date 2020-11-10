@@ -72,9 +72,21 @@ class GGT_OT_PROCESS_ACTIONS_OT_GGT(Operator):
         scene = context.scene
         tool = scene.godot_game_tools
         hips_scale = tool.hips_scale
-        actions = bpy.data.actions
-        for action in actions:
+        target_armature = tool.target_object
+        rootmotionStartFrame = tool.rootMotion_start_frame
+        for action in tool.new_join_actions:
+            target_armature.animation_data.action = action
             action.groups[0].name = action.name
+            has_rootmotion_bone = target_armature.pose.bones.find(tool.rootmotion_name) != -1
+            print("has_rootmotion_bone: ", has_rootmotion_bone)
+            if has_rootmotion_bone:
+                bpy.ops.object.mode_set(mode="POSE")
+                scene.frame_set(rootmotionStartFrame)
+                bpy.ops.pose.select_all(action='DESELECT')
+                bpy.context.view_layer.objects.active.data.bones[tool.rootmotion_name].select = True
+                bpy.ops.anim.keyframe_insert_menu(type='Location')
+                bpy.ops.object.mode_set(mode='OBJECT')
+
             for f in action.fcurves:
                if f.data_path == 'pose.bones[\"{}\"].location'.format(tool.rootmotion_hip_bone):
                     for keyframe in f.keyframe_points:
