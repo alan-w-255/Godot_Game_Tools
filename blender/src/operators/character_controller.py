@@ -216,6 +216,10 @@ class GGT_OT_RENAME_RIG_OT_GGT(Operator):
 # ------------------------------------------------------------------------ #
 # ------------------------------------------------------------------------ #
 
+# prepare rig
+## 1. apply `location` `rotation` `scale`
+## 2. rename bone name
+## 3. add rootMotionBone
 class GGT_OT_PREPARE_RIG_OT_GGT(Operator):
     bl_idname = "wm_ggt.prepare_mixamo_rig"
     bl_label = "Prepare Mixamo Rig"
@@ -231,6 +235,7 @@ class GGT_OT_PREPARE_RIG_OT_GGT(Operator):
         bpy.context.view_layer.objects.active = target_armature
         bpy.ops.object.transform_apply(location=True, rotation=True, scale=True)
         bpy.ops.wm_ggt.rename_mixamo_rig('EXEC_DEFAULT')
+        bpy.ops.wm_ggt.add_rootbone('EXEC_DEFAULT')
 
         if valid:
             bpy.data.objects["Armature"].select_set(True)
