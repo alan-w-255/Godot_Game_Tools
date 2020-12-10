@@ -1,4 +1,5 @@
 import bpy
+import re
 
 from bpy.types import (Operator)
 
@@ -222,3 +223,24 @@ class GGT_OT_DELETE_ANIMATION_OT_GGT(Operator):
 # ------------------------------------------------------------------------ #
 # ------------------------------------------------------------------------ #
 # ------------------------------------------------------------------------ #
+
+class GGT_OT_LOOP_ANIMATION_OT_GGT(Operator):
+    bl_idname = "wm_ggt.toggle_current_animation_loop"
+    bl_label = "Toggle Loop"
+    bl_description = "Toggle '-loop' Suffix To Current Selected Animation"
+
+    def execute(self, context):
+        scene = context.scene
+        tool = scene.godot_game_tools
+        character = tool.target_object
+        selectedAction = character.animation_data.action
+        if len(bpy.data.actions) > 0 and selectedAction:
+            if re.match(r'.*-loop$', selectedAction.name):
+                selectedAction.name = re.sub(r'-loop$', '', selectedAction.name)
+                self.report({'INFO'}, 'Animation Loop Canceled')
+            else:
+                selectedAction.name += '-loop'
+                self.report({'INFO'}, 'Animation Looped')
+        else:
+            self.report({'INFO'}, 'Select Animation to Loop')
+        return {'FINISHED'}

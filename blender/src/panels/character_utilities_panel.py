@@ -117,6 +117,7 @@ class GGT_PT_ANIMATIONS_PT_GGT(bpy.types.Panel, ObjectButtonsPanel):
         box.operator("wm_ggt.animation_player", icon="PLAY")
         box.operator("wm_ggt.animation_stop", icon="PAUSE")
         box.operator("wm_ggt.delete_animation", icon="TRASH")
+        box.operator("wm_ggt.toggle_current_animation_loop", icon="LOOP_FORWARDS")
 
 # ------------------------------------------------------------------------ #
 # ------------------------------------------------------------------------ #
