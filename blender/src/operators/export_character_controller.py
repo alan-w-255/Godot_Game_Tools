@@ -25,7 +25,6 @@ class GGT_OT_NLA_TRACKS_OT_GGT(Operator):
         scene = context.scene
         tool = scene.godot_game_tools
         animation = tool.animations
-        character_export_animation_loops = tool.character_export_animation_loops
         target_armature = tool.target_object
         bpy.ops.screen.animation_cancel()
         if (target_armature is None): target_armature = bpy.context.view_layer.objects.active
@@ -41,7 +40,6 @@ class GGT_OT_NLA_TRACKS_OT_GGT(Operator):
                             start = action.frame_range[0]
                             track.strips.new(action.name, start, action)
                             track.name = action.name
-                            if character_export_animation_loops: track.name += "-loop"
                 self.report({'INFO'}, 'NLA Tracks Generated')
             else:
                 self.report({'INFO'}, 'Select A Valid Armature With Animation Data')
@@ -64,13 +62,11 @@ class GGT_OT_CHARACTER_EXPORT_GGT(Operator):
         target_armature = tool.target_object
         rootMotionBoneName = tool.rootmotion_name
         character_export_format = int(tool.character_export_format)
-        character_export_animation_loops = tool.character_export_animation_loops
         character_name = tool.character_export_character_name if tool.character_export_character_name is not None else target_armature.name
         bpy.ops.wm_ggt.push_nlas('EXEC_DEFAULT')
         if (target_armature is None): target_armature = bpy.context.view_layer.objects.active
         bpy.context.view_layer.objects.active = target_armature
         character_export_path = tool.character_export_path
-        character_export_animation_loops = tool.character_export_animation_loops
         if not character_name: character_name = target_armature.name
 
         # Generate Filename To Export
@@ -106,7 +102,6 @@ class GGT_OT_CHARACTER_EXPORT_GGT(Operator):
                         preset_value = animation
                         animations[animation] = target_armature[animation]
                         updated_value = target_armature[animation]
-                        if character_export_animation_loops: updated_value+= "-loop"
                         if state["name"] == preset_value: state["name"] = updated_value
                         if transition["from"] == preset_value: transition["from"] = updated_value
                         if transition["to"] == preset_value: transition["to"] = updated_value

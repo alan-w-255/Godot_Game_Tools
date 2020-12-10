@@ -167,7 +167,6 @@ class GGT_PT_EXPORT_CHARACTER_PT_GGT(bpy.types.Panel, ObjectButtonsPanel):
             box.prop(tool, "character_export_path")
             box.prop(tool, "character_export_format")
             animationRow = box.row()
-            animationRow.prop(tool, "character_export_animation_loops")
             animationRow.prop(tool, "character_export_create_animation_tree")
             if tool.character_export_create_animation_tree:
                 box.operator("wm_ggt.load_animation_tree_preset", icon="EXPORT")
