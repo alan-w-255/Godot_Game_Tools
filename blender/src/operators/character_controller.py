@@ -13,7 +13,7 @@ class GGT_OT_INIT_CHARACTER_OT_GGT(bpy.types.Operator, ImportHelper):
     """Initializes imported model for the tool"""
     bl_idname = "wm_ggt.init_character"
     bl_label = "Initialize Character"
-    bl_description = "Used to init 'Main' Armature. Loaded character should have 'T-Pose' animation from Mixamo."
+    bl_description = "Used to init 'Main' Armature. Loaded character should have 'T_Pose' animation from Mixamo."
     bl_options = {'REGISTER', 'UNDO'}
     filename_ext = ".fbx"
     filter_glob = StringProperty(default="*.fbx", options={'HIDDEN'})
@@ -24,7 +24,7 @@ class GGT_OT_INIT_CHARACTER_OT_GGT(bpy.types.Operator, ImportHelper):
         extension = (os.path.splitext(file_path)[1])[1:].lower()
 
         if os.path.isdir(file_path):
-            return ('ERROR', 'Please select a file containing the T-Pose of your character.')
+            return ('ERROR', 'Please select a file containing the T_Pose of your character.')
         elif extension not in self.supported_extensions:
             return ('ERROR', 'The extension of the selected file is not supported. Must be one of the following: ' + ','.join(self.supported_extensions))
         elif hasattr(bpy.types, bpy.ops.import_scene.fbx.idname()):
@@ -39,7 +39,7 @@ class GGT_OT_INIT_CHARACTER_OT_GGT(bpy.types.Operator, ImportHelper):
         if bpy.data.collections.get(characterCollectionName) is None:
           characterCollection = bpy.data.collections.new(characterCollectionName)
           bpy.context.scene.collection.children.link(characterCollection)
-        self.report({'INFO'}, 'Loading Character T-Pose')
+        self.report({'INFO'}, 'Loading Character T_Pose')
         filePathWithName = bpy.path.abspath(self.properties.filepath)
         import_result = self.import_from_folder(filePathWithName, context)
         if import_result[0] != 'INFO':
@@ -63,7 +63,7 @@ class GGT_OT_INIT_CHARACTER_OT_GGT(bpy.types.Operator, ImportHelper):
                     characterCollection.objects.link(mesh)
             characterCollection.objects.link(characterArmature)
             characterArmature.name = "Armature"
-            characterArmature.animation_data.action.name = "T-Pose"
+            characterArmature.animation_data.action.name = "T_Pose"
             tool.new_join_actions.clear()
             tool.new_join_actions.append(characterArmature.animation_data.action)
             tool.target_object = characterArmature
@@ -125,7 +125,7 @@ class GGT_OT_JOIN_ANIMATIONS_OT_GGT(Operator, ImportHelper):
                     name = os.path.basename(file_path)
                     if hasattr(bpy.types, bpy.ops.import_scene.fbx.idname()):
                         actionName, actionExtension = os.path.splitext(name)
-                        if actionName != "T-Pose":
+                        if actionName != "T_Pose":
                             # Local Variable
                             file_names_list.append(actionName)
                             bpy.ops.import_scene.fbx(filepath = file_path)
@@ -134,7 +134,7 @@ class GGT_OT_JOIN_ANIMATIONS_OT_GGT(Operator, ImportHelper):
             if len(file_names_list) > 0:
                 index = 0
                 for obj in imported_objs:
-                    obj.animation_data.action.name = file_names_list[index]
+                    obj.animation_data.action.name = file_names_list[index].replace(' ', '_')
                     tool.new_join_actions.append(obj.animation_data.action)
                     # Rename the bones
                     for bone in obj.pose.bones:
@@ -159,7 +159,7 @@ class GGT_OT_JOIN_ANIMATIONS_OT_GGT(Operator, ImportHelper):
         if len(bpy.data.actions) > 0:
             for action in bpy.data.actions:
                 animation = action.name
-                if animation in "T-Pose":
+                if animation in "T_Pose":
                     tool.animations = animation
 
     def execute(self, context):
