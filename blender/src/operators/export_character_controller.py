@@ -80,11 +80,11 @@ class GGT_OT_CHARACTER_EXPORT_GGT(Operator):
 
         # GLTF
         if (character_export_format == 0):
-            bpy.ops.export_scene.gltf(filepath=fileName, export_format="GLTF_EMBEDDED", export_frame_range=False, export_force_sampling=False, export_tangents=False, export_image_format="JPEG", export_cameras=False, export_lights=False)
+            bpy.ops.export_scene.gltf(filepath=fileName, export_format="GLTF_EMBEDDED", export_frame_range=False, export_force_sampling=False, export_tangents=True, export_image_format="JPEG", export_cameras=False, export_lights=False)
 
         # GLB
         if (character_export_format == 1):
-            bpy.ops.export_scene.gltf(filepath=fileName, export_format="GLB", export_frame_range=False, export_force_sampling=False, export_tangents=False, export_image_format="JPEG", export_cameras=False, export_lights=False)
+            bpy.ops.export_scene.gltf(filepath=fileName, export_format="GLB", export_frame_range=False, export_force_sampling=False, export_tangents=True, export_image_format="JPEG", export_cameras=False, export_lights=False)
 
         # Better Collada
         if (character_export_format == 2):
